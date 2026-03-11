@@ -20,6 +20,16 @@ def quote():
     an_id: int = randint(1, len(quotes))
     return {"quote":quotes[an_id]}
 
+@app.post("/sitat", response_model=Quote)
+def add_quote(data: Quote) -> dict[str, str]:
+    new_id: int = len(quotes) + 1
+    quotes[new_id] = data.quote
+
+    return {
+        "quote": "Ny sitat opprettet",
+        "id": new_id
+    }
+
 @app.get("/sitat/total", response_model=Quote)
 def quote_total():
     return {"antall:":len(quotes)}
