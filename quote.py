@@ -18,7 +18,7 @@ def quote():
     an_id: int = randint(1, len(quotes))
     return {"quote":quotes[an_id]}
 
-@app.post("/sitat", response_model=Quote)
+@app.post("/sitat/legg", response_model=Quote)
 def add_quote(data: Quote) -> dict[str, str | int]:
     new_id: int = len(quotes) + 1
     quotes[new_id] = data.quote
@@ -27,6 +27,14 @@ def add_quote(data: Quote) -> dict[str, str | int]:
         "quote": "Ny sitat opprettet",
         "id": new_id
     }
+
+@app.post("/sitat/legg?mengde=%s", response_model=Quote)
+def add_quotes(data: Quote, amount: int):
+    for _ in range(amount):
+        new_id: int = len(quotes) + 1
+        quotes[new_id] = data.quote
+
+    return "Ferdig"
 
 @app.get("/sitat/total", response_model=Quote)
 def quote_total():
@@ -45,14 +53,10 @@ def quote_random_amount(amount: int):
 
     return random_quotes
 
-@app.get("/sitat?id=%s", response_model=Quote)
-def quote_id(an_id: int): # navn bytt grunn: "shadows built-in name" warning
-    return {"quote":quotes[an_id]}
+@app.get("/sitat?vis=%s", response_model=Quote)
+def show_quote(an_id: int): # navn bytt grunn: "shadows built-in name" warning
+    return {"quote:":quotes[an_id]}
 
 @app.get("/sitat/alle", response_model=Quote)
 def quote_all():
     return {"alle:":quotes}
-
-@app.get("/sitat?vis=%s", response_model=Quote)
-def show_quote(an_id: int):
-    return {"quote:":quotes[an_id]}
