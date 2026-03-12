@@ -1,5 +1,3 @@
-from difflib import restore
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from random import choice, randint
@@ -21,7 +19,7 @@ def quote():
     return {"quote":quotes[an_id]}
 
 @app.post("/sitat", response_model=Quote)
-def add_quote(data: Quote) -> dict[str, str]:
+def add_quote(data: Quote) -> dict[str, str | int]:
     new_id: int = len(quotes) + 1
     quotes[new_id] = data.quote
 
@@ -39,7 +37,7 @@ def quote_random():
     return {"random:":choice(quotes)}
 
 @app.get("/sitat/random?mengde=%s", response_model=Quote)
-def quote_random(amount: int):
+def quote_random_amount(amount: int):
     random_quotes = []
 
     for i in range(amount):
